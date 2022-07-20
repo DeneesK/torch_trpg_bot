@@ -10,7 +10,7 @@
 - And sends a list of contacts of these people
 - Intermediate screening results are stored in sqlite database
 
-### Telegram Bot is developed based on the pyTelegramBotAPI
+### Telegram Bot is developed based on the pyTelegramBotAPI (async_telebot)
 ##### and deployed on Heroku Cloud Service
 ##### Other libraries:
 - asyncio
