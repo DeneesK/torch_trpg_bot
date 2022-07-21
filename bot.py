@@ -26,7 +26,7 @@ async def response_processing(message):
 	answer = message.text
 	count = db_table_read_count(user_id=message.from_user.id)
 
-	if answer in ALL_TYPES:
+	if answer in ALL_TYPES and count[0] != 20:
 		user_choice = db_table_read_user_choice(user_id=message.from_user.id)
 
 		if user_choice[0]:
@@ -74,7 +74,7 @@ async def response_processing(message):
 			most_common_types = most_common_types[5:]
 			await menu_keyboard(most_common_types, message)
 	
-	elif count[0] == 20:
+	elif count[0] == 20 and answer not in ALL_TYPES:
 		count = 21
 		db_table_wright_count(count=count, user_id=message.from_user.id)
 		await feedback_func(message)
@@ -120,9 +120,9 @@ async def menu_keyboard(most_common, message):
 
 async def send_contact_list(contacts, message):
 	chat_id = message.chat.id
-	contacts_for_send = ''
+	contacts_for_sending = ''
 	for contact in contacts:
-		contacts_for_send += f'\n{contact},'
+		contacts_for_sending += f'\n{contact},'
 
 	user_choices = db_table_read_user_choice(user_id=chat_id)
 	keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
@@ -136,10 +136,11 @@ async def send_contact_list(contacts, message):
 		reply_markup=types.ReplyKeyboardRemove()
 	)
 
-	await bot.send_message(chat_id=chat_id, text=contacts_for_send)
+	await bot.send_message(chat_id=chat_id, text=contacts_for_sending)
 	await bot.send_message(chat_id=chat_id, text=f"{try_again_text}")
 	count = 20
 	db_table_wright_count(count=count, user_id=message.from_user.id)
+
 
 if __name__ == "__main__":
 	asyncio.run(bot.infinity_polling())

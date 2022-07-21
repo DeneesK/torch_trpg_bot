@@ -23,15 +23,13 @@ class UsersData:
     @classmethod
     def get_types_from_dict(cls, user_dict):
         user_type = []
-        for _type in user_dict.keys():
-            user_type.append(_type)
+        [user_type.append(_type) for _type in user_dict.keys()]
         return '|'.join(user_type)
 
     @classmethod
     def get_contacts_from_dict(cls, user_dict):
         user_contact = []
-        for cotact in user_dict.values():
-            user_contact.append(cotact)
+        [user_contact.append(cotact) for cotact in user_dict.values()]
         return '|'.join(user_contact)
     
     @classmethod 

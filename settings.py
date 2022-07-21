@@ -3,7 +3,7 @@ from os import environ
 
 TOKEN = environ['TG_TOKEN']
 
-CHAT_ID = environ['TG_TOKEN']  # Чат ID для отправки отзывов
+CHAT_ID = environ['CHAT_ID']  # Чат ID для отправки отзывов
 
 check_number = 7  # Указывает на то, когда отправлять контакты. Отправляются, когда после отсевов осталось меньше, либо равно этому числу контактов
 
