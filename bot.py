@@ -12,21 +12,28 @@ bot = telebot.async_telebot.AsyncTeleBot(TOKEN)  # Token imported from settings.
 
 @bot.message_handler(commands=['start'])
 async def send_welcome(message):
+	"""
+	Sends a welcome message and launches a keyboard to select type
+	"""
 	delet_row(user_id=message.from_user.id)
 
 	user_id = message.from_user.id
 	db_table_row_create(user_id=user_id, count=0)
 
-	types_ranking = UsersData.create_types_ranking()
+	types_ranking = UsersData.create_types_ranking()  # creates tuple with most common types according Google table
 	await start_keyboard(types_ranking, message)
 
 
 @bot.message_handler(func=lambda message: True)
 async def response_processing(message):
+	"""
+	Receives and processes all subsequent messages until 
+	the contact list  has len more the specified number(check_number from settings)
+	"""
 	answer = message.text
 	count = db_table_read_count(user_id=message.from_user.id)
 
-	if answer in ALL_TYPES and count[0] != 20:
+	if answer in ALL_TYPES and count[0] != 20:  # ALL-TYPES imported from settings
 		user_choice = db_table_read_user_choice(user_id=message.from_user.id)
 
 		if user_choice[0]:
@@ -77,11 +84,11 @@ async def response_processing(message):
 	elif count[0] == 20 and answer not in ALL_TYPES:
 		count = 21
 		db_table_wright_count(count=count, user_id=message.from_user.id)
-		await feedback_func(message)
+		await send_feedback(message)
 
 
 @bot.message_handler(func=lambda message: True)
-async def feedback_func(message):
+async def send_feedback(message):
 	if message.text == '/start':
 		pass
 	else:

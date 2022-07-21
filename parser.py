@@ -4,9 +4,17 @@ from googlesheet import USERS_DICT
 
 class UsersData:
     users_dict = USERS_DICT
-
+    """ 
+    Processes the dictionary received by google api 
+    based on the requests that the user sends to 
+    the bot in a telegram
+    """
     @staticmethod
     def get_suitable_users(answer, users_dict):
+        """
+        Based on the response from the user in the telegram, delet from dict 
+        those contacts that do not contain the selected type
+        """
         result = users_dict.copy()
         for item in users_dict.keys():
             if answer not in item:
@@ -15,6 +23,10 @@ class UsersData:
 
     @classmethod
     def create_types_ranking(cls):
+        """
+        create tuple with most common types and sort it
+        from the most common type to the least
+        """
         types_list = list(cls.users_dict.keys())
         types_ranking = Counter((",".join(types_list)).split(','))
         del types_ranking[' ']
@@ -34,6 +46,10 @@ class UsersData:
     
     @classmethod 
     def get_most_common(cls, user_type):
+        """
+        create tuple with most common types
+        takes a dictionary as an argument. 
+        """
         result = user_type.split('|')
         result = Counter((",".join(result)).split(','))
         del result[' ']
@@ -41,6 +57,9 @@ class UsersData:
     
     @classmethod
     def create_user_dict(cls, user_type, user_contact):
+        """
+        create a dictionary from a string and remove a key-value pair with an empty value
+        """
         user_type_list = tuple(user_type[0].split('|'))
         user_contact_list = tuple(user_contact[0].split('|'))
         user_dict = dict(zip(user_type_list, user_contact_list))
