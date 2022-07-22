@@ -63,10 +63,7 @@ async def response_processing(message):
 			most_common_types = most_common_types[5:]
 			contacts_list = UsersData.create_contacts_list(user_contact)
 
-			if len(contacts_list) <= check_number:
-				await send_contact_list(contacts_list, message)
-			else:
-				await menu_keyboard(most_common_types, message)
+			await send_contact_list(contacts_list, message) if len(contacts_list) <= check_number else await menu_keyboard(most_common_types, message)
 		else:
 			suitable_user_dict = UsersData.get_suitable_users(
 				answer=answer, 
@@ -82,32 +79,28 @@ async def response_processing(message):
 			await menu_keyboard(most_common_types, message)
 	
 	elif count[0] == 20 and answer not in ALL_TYPES:
-		count = 21
-		db_table_wright_count(count=count, user_id=message.from_user.id)
+		db_table_wright_count(count=21, user_id=message.from_user.id)
 		await send_feedback(message)
 
 
 @bot.message_handler(func=lambda message: True)
 async def send_feedback(message):
-	if message.text == '/start':
-		pass
-	else:
+	if message.text != '/start':
 		await bot.send_message(chat_id=CHAT_ID, text=message.text)  # CHAT_ID imported from settings.py
 		await bot.reply_to(message, feedback_thanks_message)
 
 
 async def start_keyboard(types_ranking, message):
-	if message.text == '/start':
-		keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
-		buttons = [
-			types_ranking[random.randint(0, 2)][0],
-			types_ranking[random.randint(3, 5)][0],
-			types_ranking[random.randint(6, 8)][0],
-			types_ranking[random.randint(9, 11)][0],
-		]
-		random.shuffle(buttons)
-		[keyboard.add(button) for button in buttons]
-		await bot.reply_to(message, greeting_text, parse_mode='html', reply_markup=keyboard)
+	keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
+	buttons = [
+		types_ranking[random.randint(0, 2)][0],
+		types_ranking[random.randint(3, 5)][0],
+		types_ranking[random.randint(6, 8)][0],
+		types_ranking[random.randint(9, 11)][0],
+	]
+	random.shuffle(buttons)
+	[keyboard.add(button) for button in buttons]
+	await bot.reply_to(message, greeting_text, parse_mode='html', reply_markup=keyboard)
 
 
 async def menu_keyboard(most_common, message):
@@ -132,9 +125,6 @@ async def send_contact_list(contacts, message):
 		contacts_for_sending += f'\n{contact},'
 
 	user_choices = db_table_read_user_choice(user_id=chat_id)
-	keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
-	button = ''
-	keyboard.add(button)
 
 	await bot.send_message(
 		chat_id=chat_id,
@@ -145,8 +135,7 @@ async def send_contact_list(contacts, message):
 
 	await bot.send_message(chat_id=chat_id, text=contacts_for_sending)
 	await bot.send_message(chat_id=chat_id, text=f"{try_again_text}")
-	count = 20
-	db_table_wright_count(count=count, user_id=message.from_user.id)
+	db_table_wright_count(count=20, user_id=message.from_user.id)
 
 
 if __name__ == "__main__":
