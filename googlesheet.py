@@ -22,7 +22,6 @@ result_contacts = sheet.values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID, range=
 
 
 
-
 def get_users_list(result_types, result_contacts):
     pre_contacts_list = []
     pre_types_list = []
