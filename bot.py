@@ -75,7 +75,7 @@ async def response_processing(message):
 			db_table_wright_user_contact(user_contact, user_id=message.from_user.id)
 
 			most_common_types = UsersData.get_most_common(user_type)
-			most_common_types = most_common_types[5:]
+			del most_common_types[0:5]
 			await menu_keyboard(most_common_types, message)
 	
 	elif count[0] == 20 and answer not in ALL_TYPES:
