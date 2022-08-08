@@ -21,11 +21,10 @@ result_types = sheet.values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID, range=SAM
 result_contacts = sheet.values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID, range=SAMPLE_RANGE_NAME_CONTACTS).execute()
 
 
-
 def get_users_list(result_types, result_contacts):
     pre_contacts_list = []
     pre_types_list = []
-    for key, value in result_contacts.items():
+    for _, value in result_contacts.items():
         pre_contacts_list.append(value)
     pre_contacts_list = pre_contacts_list[2:][0]
 
@@ -33,7 +32,7 @@ def get_users_list(result_types, result_contacts):
     for item in pre_contacts_list:
         contacts_list.append(''.join(item))
 
-    for key, value in result_types.items():
+    for _, value in result_types.items():
         pre_types_list.append(value)
     pre_types_list = pre_types_list[2:][0]
 
